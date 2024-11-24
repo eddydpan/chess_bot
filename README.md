@@ -70,8 +70,4 @@ After the first week, the team made significant progress on three key fronts:
 ### **4. Website**
 - Successfully launched this website! You’re looking at it now!
 
----
-
-## Conclusion
-
 While many details of this project are still in development, the team has a solid foundation and is eager to tackle the challenges ahead.
