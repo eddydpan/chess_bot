@@ -2,7 +2,7 @@
 
 ## Welcome!
 
-Welcome to the Chess-bot landing page. This repository hosts a ROS package that enables a Widow X robotic arm to play chess in real-time against a human player. The package allows the robot to:
+Welcome to the Chess-bot landing page. This repository hosts a ROS package that enables a WidowX-200 robotic arm to play chess in real-time against a human player. The package allows the robot to:
 
 - Interpret the changing chessboard using machine vision.
 - Calculate the optimal move.
@@ -55,6 +55,7 @@ After the first week, the team made significant progress on three key fronts:
 - Integrated the **robot bridge repository** from the Berkeley Robot and AI Laboratory to control the Widow X.
 - Set up a functional simulator using the **Trossen Robotics X Series Arms Simulator** to enable testing without physical access to the robot.
 - Created a collection of helpful commands for controlling the arm.
+- Established a plan for deliverables by the next milestone.
 
 ### **2. Background Research**
 - Researched previous uses of the Widow X, prior chess bots, and kinematic arm theory.
@@ -67,7 +68,10 @@ After the first week, the team made significant progress on three key fronts:
 - Developed a preliminary system architecture, detailed in the "Package Structure" section above.
 - Focused on scoping the Minimum Viable Product (MVP) effectively. For example, alternative methods for pose estimation are prioritized over implementing stereo vision depth estimation.
 
-### **4. Website**
+### **4. Next Steps**
+We aim to accomplish a few toy problems that will segue nicely into our project. We will focus on a pick-and-place module and a "move to (x,y,z)" module, which once integrated together alongside a basic chess engine, will act as our MVP. 
+
+### **5. Website**
 - Successfully launched this website! You’re looking at it now!
 
 While many details of this project are still in development, the team has a solid foundation and is eager to tackle the challenges ahead.
