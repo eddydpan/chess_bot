@@ -76,6 +76,9 @@ class GripperController(GripperControllerBase):
     def close(self):
         self.des_pos = self._lower_limit
 
+    def narrow(self):
+        self.des_pos = self._upper_limit * 2/3 + self._lower_limit * 1/3
+
     def set_continuous_position(self, target):
         target_clipped = np.clip(target, self.des_pos_min, self.des_pos_max)
         if target != target_clipped:

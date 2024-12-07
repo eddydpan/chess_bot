@@ -191,8 +191,10 @@ class WidowXActionServer():
         return obs
 
     def __gripper(self, payload) -> WidowXStatus:
-        if payload["open"] > 0.5:  # convert to bool, for future float support
+        if payload["open"] > 0.7:  # convert to bool, for future float support
             self.bridge_env.controller().open_gripper()
+        elif 0.3 < payload["open"]:
+            self.bridge_env.controller().narrow_gripper()
         else:
             self.bridge_env.controller().close_gripper()
         return WidowXStatus.SUCCESS
