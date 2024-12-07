@@ -417,9 +417,9 @@ class WidowX_Controller(RobotControllerBase):
             self.des_gripper_state = np.array([1])
             self.bot.gripper.open()
     
-    def narrow_gripper(self, wait=False):
+    def move_gripper(self, pos, wait=False):
         if self.custom_gripper_controller:
-            self._gripper.narrow()
+            self._gripper.move(pos)
         else:
             pass
 
