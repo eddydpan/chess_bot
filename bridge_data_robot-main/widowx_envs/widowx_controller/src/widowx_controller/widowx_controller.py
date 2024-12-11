@@ -258,7 +258,7 @@ class WidowX_Controller(RobotControllerBase):
                 print('no IK solution found, do nothing')
                 # self.open_gripper()
                 # self.move_to_neutral()
-                # raise Environment_Exception
+                raise Environment_Exception
 
             # if success: 
             #     print(f"Robot moved to "+target_pose+" .")
