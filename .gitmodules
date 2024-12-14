@@ -1,0 +1,6 @@
+[submodule "bridge_data_robot-main/chess-ai"]
+	path = bridge_data_robot-main/chess-ai
+	url = git@github.com:eddydpan/chess-ai.git
+[submodule "BettaFish"]
+	path = chess-ai
+	url = git@github.com:eddydpan/chess-ai.git
