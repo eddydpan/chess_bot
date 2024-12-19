@@ -18,22 +18,25 @@ def interpret_gesture(landmarks):
     # Convert normalized landmarks to a more usable form
     points = [(landmark.x, landmark.y, landmark.z) for landmark in landmarks.landmark]
 
-    # Example 1: "Thumbs Up"
-    if points[mp_hands.HandLandmark.THUMB_TIP][1] < points[mp_hands.HandLandmark.THUMB_IP][1] < points[mp_hands.HandLandmark.THUMB_MCP][1]:
-        if points[mp_hands.HandLandmark.INDEX_FINGER_MCP][1] < points[mp_hands.HandLandmark.INDEX_FINGER_PIP][1]:
-            return "Thumbs Up"
+    # # Example 1: "Thumbs Up"
+    # if points[mp_hands.HandLandmark.THUMB_TIP][1] < points[mp_hands.HandLandmark.THUMB_IP][1] < points[mp_hands.HandLandmark.THUMB_MCP][1]:
+    #     if points[mp_hands.HandLandmark.INDEX_FINGER_MCP][1] < points[mp_hands.HandLandmark.INDEX_FINGER_PIP][1]:
+    #         return "Thumbs Up"
 
-    # Example 2: "Fist" (All fingers folded)
-    if all(points[i][1] > points[i + 1][1] for i in [mp_hands.HandLandmark.INDEX_FINGER_MCP, 
-                                                    mp_hands.HandLandmark.MIDDLE_FINGER_MCP,
-                                                    mp_hands.HandLandmark.RING_FINGER_MCP,
-                                                    mp_hands.HandLandmark.PINKY_MCP]):
-        return "Fist"
+    # # Example 2: "Fist" (All fingers folded)
+    # if all(points[i][1] > points[i + 1][1] for i in [mp_hands.HandLandmark.INDEX_FINGER_MCP, 
+    #                                                 mp_hands.HandLandmark.MIDDLE_FINGER_MCP,
+    #                                                 mp_hands.HandLandmark.RING_FINGER_MCP,
+    #                                                 mp_hands.HandLandmark.PINKY_MCP]):
+    #     return "Fist"
     
-    # Example 3: "Thumbs Down"
-    if points[mp_hands.HandLandmark.THUMB_TIP][1] > points[mp_hands.HandLandmark.THUMB_IP][1] > points[mp_hands.HandLandmark.THUMB_MCP][1]:
-        if points[mp_hands.HandLandmark.INDEX_FINGER_MCP][1] < points[mp_hands.HandLandmark.INDEX_FINGER_PIP][1]:
-            return "Thumbs Down"
+    # # Example 3: "Thumbs Down"
+    # if points[mp_hands.HandLandmark.THUMB_TIP][1] > points[mp_hands.HandLandmark.THUMB_IP][1] > points[mp_hands.HandLandmark.THUMB_MCP][1]:
+    #     if points[mp_hands.HandLandmark.INDEX_FINGER_MCP][1] < points[mp_hands.HandLandmark.INDEX_FINGER_PIP][1]:
+    #         return "Thumbs Down"
+
+    if points[mp_hands.HandLandmark.WRIST][1] > points[mp_hands.HandLandmark.THUMB_CMC][1]:
+            return "Shake"
 
     # If no gesture recognized
     return None
