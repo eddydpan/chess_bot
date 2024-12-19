@@ -58,10 +58,9 @@ def main():
     is_open = 1
     try:
         playing = True
-
-        client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
+        client.move(np.array([0.1, 0, 0.15, 0, 1.5, 0]),blocking=True)
         while playing:
-
+            post_capture = False
             # view_thread = threading.Thread(target = board_view.show_frame)
             # view_thread.start()
 
@@ -130,28 +129,10 @@ def main():
                 piece = piece2
                 player_to_square = chess.parse_square(cell1)
             
-            
-
+    
             board.push(board.Move(player_from_square, player_to_square))
 
             print(board)
-            ## Bot move ##
-            # bot_move = input("Bot's move: ")
-            # if len(bot_move.split(" ")) != 2:
-            #     print_yellow("Please enter two arguments.")
-            #     continue
-
-            # bot_from_square = int(bot_move.split(" ")[0])
-            # bot_to_square = int(bot_move.split(" ")[1])
-
-            # client.move(np.array([0.15, 0, 0.15, 0, 1.57, 0])) # Move home
-    
-            # height = heights[bot_from_square], poses[bot_to_square], height, clearance_height, client)
-            # # Update the board with the bot's move
-            # board.push(move=chess.Move(from_squared.piece_at(bot_from_square).symbol().upper()]
-            # print(board.piece_at(bot_from_square).symbol().upper())
-            # clearance_height = height + 0.08
-            # pick_and_place(poses[=bot_from_square, to_square=bot_to_square))
             
             # Get the move of the bot
             minmax = minimax.Minimax(board)
@@ -168,9 +149,10 @@ def main():
 
             if board.is_capture(bot_move):
                 print_yellow("Capture!")
-                clearance_height = height + 0.1
+                
 
                 height = heights[board.piece_at(bot_to_square).symbol().upper()]
+                clearance_height = height + 0.1
 
                 captures_per_row = 3
                 offset = 0.05
@@ -190,7 +172,7 @@ def main():
 
                 captures += 1
                 print(f"Capturing on {bot_move.to_square}")
-                pass
+                post_capture = True
 
             height = heights[board.piece_at(bot_from_square).symbol().upper()]
             clearance_height = height + 0.1
@@ -198,7 +180,8 @@ def main():
                            xy_final=poses[bot_to_square], 
                            height=height, 
                            clearance_height=clearance_height, 
-                           client=client)
+                           client=client,
+                           post_capture=post_capture)
 
             # Update virtual board model
             board.push(bot_move)
