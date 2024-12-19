@@ -123,18 +123,16 @@ def main():
 
             if piece1 and piece1.color == chess.WHITE:
                 piece = piece1
-                moved_to = cell2
+                player_from_square = chess.parse_square(cell1)
+                player_to_square = chess.parse_square(cell2)
             else:
+                player_from_square = chess.parse_square(cell2)
                 piece = piece2
-                moved_to = cell1
+                player_to_square = chess.parse_square(cell1)
             
-            if piece.symbol() == "P":
-                player_move = moved_to
-            else:
             
-                player_move = piece.symbol() + moved_to
 
-            board.push_san(player_move)
+            board.push(board.Move(player_from_square, player_to_square))
 
             print(board)
             ## Bot move ##
