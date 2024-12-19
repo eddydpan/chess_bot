@@ -180,6 +180,7 @@ For our stretch goals we would like to look at the following:
 
 ### System Architecture 
 
+<img src="/sys_arch.jpg">
 
 
 The diagram above shows all the core components that make up the Chess Bot and the data that flows between them. Further descriptions of each component are below.
