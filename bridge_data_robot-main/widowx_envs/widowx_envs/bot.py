@@ -58,13 +58,15 @@ def main():
     is_open = 1
     try:
         playing = True
+
+        client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
         while playing:
 
             # view_thread = threading.Thread(target = board_view.show_frame)
             # view_thread.start()
 
             # Go home
-            client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
+            # client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
             input("enter when arm is ready")
 
 
@@ -170,6 +172,8 @@ def main():
                 print_yellow("Capture!")
                 clearance_height = height + 0.1
 
+                height = heights[board.piece_at(bot_to_square).symbol().upper()]
+
                 captures_per_row = 3
                 offset = 0.05
 
@@ -190,6 +194,7 @@ def main():
                 print(f"Capturing on {bot_move.to_square}")
                 pass
 
+            height = heights[board.piece_at(bot_from_square).symbol().upper()]
             clearance_height = height + 0.1
             pick_and_place(xy_initial=poses[bot_from_square], 
                            xy_final=poses[bot_to_square], 
