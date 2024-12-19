@@ -35,8 +35,8 @@ heights = {'P' : 0.004,
            'N' : 0.000,
            'B' : 0.006,
            'R' : 0.005,
-           'Q' : 0.011,
-           'K' : 0.014,}
+           'Q' : 0.025,
+           'K' : 0.032,}
 
 board = chess.Board()
 
@@ -175,6 +175,10 @@ def main():
 
                 x_position = 0.18 + (captures // captures_per_row) * offset
                 y_position = 0.2 + (captures % captures_per_row) * offset
+
+                print(f"height: {height}")
+                print(f"x_pos: {x_position}")
+                print(f"y_pos: {y_position}")
 
                 pick_and_place(xy_initial=poses[bot_to_square],
                             xy_final=(x_position, y_position),
