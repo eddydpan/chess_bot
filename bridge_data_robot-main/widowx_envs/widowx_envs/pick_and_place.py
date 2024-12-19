@@ -45,7 +45,7 @@ def find_placing_droop(pickup_point, place_point):
     pickup_disp = distance_from_zero_zero(pickup_point)
     place_disp = distance_from_zero_zero(place_point)
     xy_increase = place_disp - pickup_disp
-    return max(pickup_disp - max(place_disp, 0.3), 0) * -0.0529
+    return (pickup_disp - max(place_disp, 0.2)) * -0.0529
 
 
 def pick_and_place(xy_initial, xy_final, height, clearance_height, client, gripper_width=0.8,blocking=True):
@@ -101,7 +101,7 @@ def pick_and_place(xy_initial, xy_final, height, clearance_height, client, gripp
     time.sleep(1.5)
 
     # Placing step
-    client.move(np.array([x_final, y_final, height+placing_droop, 0, 1.5, np.pi / 4]),blocking=blocking)
+    client.move(np.array([x_final, y_final, height+placing_droop+0.002, 0, 1.5, np.pi / 4]),blocking=blocking)
     time.sleep(1.5)
     client.move_gripper(gripper_width) # moves to narrow if narrow, otherwise opens fully
     time.sleep(1.5)
