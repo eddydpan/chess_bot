@@ -15,6 +15,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../.
 import minimax
 # from widowx_envs.cv import BoardView
 from widowx_envs.cv import BoardView
+import inspect
 
 print_yellow = lambda x: print("\033[93m {}\033[00m" .format(x))
 
@@ -71,15 +72,28 @@ def main():
             board_view.update_board_state()
 
             
+            time.sleep(1)
+            
+            legal_moves_lst = [
+                board.san(move)
+                for move in board.legal_moves
+            ]
+            print(f"Availabe Moves: {legal_moves_lst}")
 
             # print_yellow("Enter moves as [x y] where x is the index of the square the piece starts at, and y is the square the piece moves to.")
             print_yellow("Enter moves as their algebraic notation. For example, moving a Pawn from e2 to e4 would be <e4>, and moving a Knight from b1 to c3 is <Nc3> (without the <>)" )
 
+            valid_input = False
+            # while not valid_input:
             ## Player's move ##
-            # player_move = 
             input("Enter when finished playing the move. White's move: ")
-
             
+            # commenting this out for now
+            '''if player_move in legal_moves_lst:
+                print_yellow("Move Accepted")
+                valid_input = True
+            else:
+                print("Invalid move. Please input legal move.")'''
 
             # if len(player_move.split(" ")) != 2:
             #     print_yellow("Please enter two arguments.")
@@ -119,7 +133,6 @@ def main():
                 player_move = piece.symbol() + moved_to
 
             board.push_san(player_move)
-
 
             print(board)
             ## Bot move ##
