@@ -58,8 +58,7 @@ def main():
     is_open = 1
     try:
         playing = True
-
-        client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
+        client.move(np.array([0.1, 0, 0.15, 0, 1.5, 0]),blocking=True)
         while playing:
             post_capture = False
             # view_thread = threading.Thread(target = board_view.show_frame)
