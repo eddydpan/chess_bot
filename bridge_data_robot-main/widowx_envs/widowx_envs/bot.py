@@ -57,9 +57,14 @@ def main():
 
     is_open = 1
     try:
-        playing = True
+        # Handshake with player
+        shook_hands = False
+        while not shook_hands:
+            break
 
         client.move(np.array([0.1, 0, 0.1, 0, 1.57, 0])) # Move home
+
+        playing = True
         while playing:
             post_capture = False
             # view_thread = threading.Thread(target = board_view.show_frame)
