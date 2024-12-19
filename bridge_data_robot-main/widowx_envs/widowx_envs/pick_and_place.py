@@ -48,7 +48,7 @@ def find_placing_droop(pickup_point, place_point):
     return (pickup_disp - max(place_disp, 0.2)) * -0.0529
 
 
-def pick_and_place(xy_initial, xy_final, height, clearance_height, client, gripper_width=0.8,blocking=True):
+def pick_and_place(xy_initial, xy_final, height, clearance_height, client, gripper_width=0.8,blocking=True, post_capture=False):
     '''
     Pick up an object at a certain position  and place it at a different position.
 
@@ -70,14 +70,15 @@ def pick_and_place(xy_initial, xy_final, height, clearance_height, client, gripp
     height -= pickup_droop
 
     # Move home
-    client.move_gripper(gripper_width)
-    time.sleep(1.5)
-    move = client.move(np.array([0.15, 0, 0.15, 0, 1.5, 0]),blocking=blocking)
-    if move == 2: # in case it can't find a path directly to its final point
-        client.step_action(np.array([-0.05, 0, 0, 0, 0,0, gripper_width]),blocking=blocking)
+    if not post_capture:
+        client.move_gripper(gripper_width)
         time.sleep(1.5)
-        client.move(np.array([0.15, 0, 0.15, 0, 1.5, 0 / 4]),blocking=blocking)
-    time.sleep(1.5)
+        move = client.move(np.array([0.15, 0, 0.15, 0, 1.5, 0]),blocking=blocking)
+        if move == 2: # in case it can't find a path directly to its final point
+            client.step_action(np.array([-0.05, 0, 0, 0, 0,0, gripper_width]),blocking=blocking)
+            time.sleep(1.5)
+            client.move(np.array([0.15, 0, 0.15, 0, 1.5, 0 / 4]),blocking=blocking)
+        time.sleep(1.5)
 
     # Pick up piece
     client.move(np.array([x_initial, y_initial, clearance_height+height, 0, 1.5, 0]),blocking=blocking) # don't roll here so the IK solver doesn't freak out
