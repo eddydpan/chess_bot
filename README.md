@@ -24,6 +24,9 @@ Welcome to the Chess-bot landing page. This repository hosts a ROS package that 
 - **Dan Park**  
   Dan is an engineering with computing student at Olin College of Engineering (Class of 2025). He reached the round of 16 in the JPMorgan Chess Competition, so he’s “okay” at chess.
 
+- **Kate McCurley**  
+  Kate is an engineering with robotics student at Olin College of Engineering (Class of 2025). Kate is most excited about working on computer vision as well as getting to work with a robotic arm for the first time. 
+
 ---
 
 ## Package Structure
