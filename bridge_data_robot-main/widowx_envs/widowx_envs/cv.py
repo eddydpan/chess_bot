@@ -9,32 +9,30 @@ import time
  
 
 class BoardView():
-    class Corner(Enum):
-        # ROBOT_L = 96
+    # ids and locations of april tags
+    class BoardTags(Enum):
         PLAYER_R = 98
         PLAYER_L = 99
         ROBOT_R = 97
     
-    BoardCorners = {
-        # "ROBOT_L": 0,
-        "PLAYER_R": 2,
-        "PLAYER_L": 1,
-        "ROBOT_R": 3
-    }
+    # index of the relevant corner of each april tag
+    class BoardCorners(Enum):
+        PLAYER_R = 2
+        PLAYER_L = 1
+        ROBOT_R = 3
 
     def __init__(self):
-        self.cap = cv2.VideoCapture(0)
-        self.cap.set(0, 1)
+        self.cap = cv2.VideoCapture(0) # check num for webcam
 
         _, self.init_frame = self.cap.read()
-        _, self.init_frame = self.cap.read()
+        # _, self.init_frame = self.cap.read()
 
         self.H, self.W = self.init_frame.shape[:2]
         self.CENTER = (self.W // 2, self.H // 2)
 
         self.frame = cv2.cvtColor(self.init_frame, cv2.COLOR_BGR2GRAY)
 
-        # rotate and translate frame for best view
+        # rotate and translate frame as needed for best view
         self.frame = self.__rotate_frame(self.frame, 25)
 
         # last saved board state
@@ -44,6 +42,9 @@ class BoardView():
     
 
     def show_frame(self):
+        '''
+        Show live camera feed, helpful for debugging
+        '''
         running = True
 
         while running:
@@ -56,9 +57,11 @@ class BoardView():
         self.cap.release()
         cv2.destroyAllWindows()
 
-        
     
-    def __find_tags(self, draw = False):
+    def __find_tags(self):
+        '''
+        Find apriltags visible in image and save corners to tag_dict
+        '''
         detector = apriltag.Detector()
         _, self.init_frame = self.cap.read()
         self.init_frame = self.__rotate_frame(self.init_frame, 25)
@@ -69,24 +72,27 @@ class BoardView():
         tag_dict = {}
 
         for tag in april_tags:
-            print(tag.tag_id)
-            tag_dict[self.Corner(tag.tag_id).name] = tag.corners
+            # print(tag.tag_id)
+            tag_dict[self.BoardTags(tag.tag_id).name] = tag.corners
 
-            # if draw:
-            #     cv2.polylines(self.frame, [tag.corners.astype(int)], True, (0, 255, 0), 2)
-            #     self.show_frame()
-        print(tag_dict)
+        # print(tag_dict)
         return tag_dict
     
     def __get_corners(self, tag_dict):
+        '''
+        From corners of seen april tags, find corners of chess board
+        '''
         board_corners = []
 
-        for corner, idx in self.BoardCorners.items():
-            board_corners.append(tag_dict[corner][idx])
+        for c in self.BoardCorners:
+            board_corners.append(tag_dict[c.name][c.value])
         
         return board_corners
 
-    def create_grid(self, corners):
+    def __create_grid(self, corners):
+        '''
+        From corners of board, create board grid
+        '''
         nx = 9
         ny = 9
 
@@ -108,25 +114,25 @@ class BoardView():
                 ])
                 grid.append(cell)
         
-        # i feel like odds are i dont need this line
-        # grid = list(filter(prep(square).intersects, grid))
 
         for cell in grid:
             ext_pts = cell.exterior.coords
             pts = np.array(ext_pts, np.int32)
             pts = pts.reshape((-1, 1, 2))
+            # draw lines on frame for debugging
             # cv2.polylines(self.frame, [pts], True, (0, 255, 0), 2)
 
+        # visualize frame for debugging
         # cv2.imshow('frame', self.frame)
         # cv2.waitKey(0)  # Wait for a key press
         # cv2.destroyAllWindows()  # Close the window
 
         letters = "hgfedcba"
-        idx = 0
-        num = 0
+        idx = 0 # index of letter in letters string
+        num = 0 # number associated with square
 
+        # assign chess square names to grid cells, eg "a1"
         for cell in grid:
-            # i think this is gonna name them right but we'll see
             cell_label = letters[idx] + str(num + 1)
             self.board_cells[cell_label] = cell
 
@@ -134,39 +140,47 @@ class BoardView():
             if num == 8:
                 num = 0
                 idx += 1
-            
-            
         
-        print(self.board_cells.keys())
-        print(self.board_cells.values())
+        # print(self.board_cells.keys())
+        # print(self.board_cells.values())
 
     
-    def locate_board(self, draw = False):
-        tag_dict = self.__find_tags(draw)
+    def locate_board(self):
+        '''
+        Locate chess board in current camera image
+        '''
+        tag_dict = self.__find_tags()
         
         while(len(tag_dict) != 3):
             print(len(tag_dict))
-            print("thats bad")
+            print("Incorrect number of Apriltags detected")
 
             tag_dict = self.__find_tags()
         
-        print("escaped????")
         corners = self.__get_corners(tag_dict)
-        self.create_grid(corners)
+        self.__create_grid(corners)
     
     
     def update_board_state(self):
-        print("taking new image!!")
+        '''
+        Capture and store image of board state for later comparison
+        '''
+        # print("taking new image!!")
+
+        # only updates every 4 captures read, ensures new image is taken
         for _ in range(4):
             self.cap.read()
+
         _, frame = self.cap.read()
         frame = self.__rotate_frame(frame, 25)
         self.last_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    def find_moved_piece(self, draw = False):
+    def find_moved_piece(self):
+        '''
+        Compare current image to previous image to find where the player moved
+        '''
         for _ in range(4):
             self.cap.read()
-
 
         _, init_frame = self.cap.read()
         init_frame = self.__rotate_frame(init_frame, 25)
@@ -193,26 +207,33 @@ class BoardView():
             
             cell_diffs[cell_name] = cell_diff
         
-        print(cell_diffs)
+        # print(cell_diffs)
         sorted_cells = sorted(cell_diffs, key = cell_diffs.get)
 
         for i in range(0, 2):
             ext_pts = self.board_cells[sorted_cells[i]].exterior.coords
             pts = np.array(ext_pts, np.int32)
             pts = pts.reshape((-1, 1, 2))
-            cv2.polylines(diff, [pts], True, (0, 0, 255), 5)
+            cv2.polylines(diff, [pts], True, (0, 0, 255), 5) # draw square
         
+        # display diff with player move squares drawn on
         cv2.imshow('diff', diff)
-        cv2.waitKey(0)  # Wait for a key press
-        cv2.destroyAllWindows()  # Close the window
+        cv2.waitKey(0)  # wait for 0 key to be pressed
+        cv2.destroyAllWindows()  # close image window
 
         return sorted_cells[0], sorted_cells[1]
 
     def __rotate_frame(self, frame, theta):
+        '''
+        Rotate given frame by given theta
+        '''
         R = cv2.getRotationMatrix2D(self.CENTER, theta, 1.0)
         return cv2.warpAffine(frame, R, (self.W, self.H))
     
     def __translate_frame(self, frame, x, y):
+        '''
+        Translate given frame using given x and y
+        '''
         T = np.float32([[1, 0, x], [0, 1, y]])
         return cv2.warpAffine(frame, T, (self.W, self.H))
     

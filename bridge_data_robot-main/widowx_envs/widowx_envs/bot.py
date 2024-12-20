@@ -89,7 +89,8 @@ def main():
             ## Player's move ##
             input("Enter when finished playing the move. White's move: ")
             
-            # commenting this out for now
+            # move validation - use when running without camera
+            # not yet integrated with CV move detection
             '''if player_move in legal_moves_lst:
                 print_yellow("Move Accepted")
                 valid_input = True
@@ -130,7 +131,7 @@ def main():
                 player_to_square = chess.parse_square(cell1)
             
     
-            board.push(board.Move(player_from_square, player_to_square))
+            board.push(chess.Move(player_from_square, player_to_square))
 
             print(board)
             
